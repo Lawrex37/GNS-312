@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Moral Philosophy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  
+<<style>
+  /* Classical Philosophy Theme */
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Crimson+Text:wght@400;600&display=swap');
+
+  body {
+    font-family: 'Crimson Text', serif;
+    background: #EDE3D3; /* parchment background */
+    color: #2A1F16; /* deep ink brown */
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .quiz-box {
+    background: #FDF8F1; /* soft aged paper */
+    width: 95%;
+    max-width: 650px;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(60,40,20,0.15);
+    border: 1px solid #D8C8B5;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: #3B2A1A;
+    letter-spacing: 0.5px;
+  }
+
+  .counter {
+    text-align: center;
+    font-size: 15px;
+    color: #7A5C42;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  .question {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 22px;
+    color: #2A1F16;
+    line-height: 1.8;
+  }
+
+  .options button {
+    width: 100%;
+    padding: 16px;
+    margin: 10px 0;
+    background: #F5EBDD; /* light parchment */
+    border: 1px solid #D2BFA9;
+    border-radius: 10px;
+    color: #2A1F16;
+    text-align: left;
+    cursor: pointer;
+    font-size: 17px;
+    font-family: 'Crimson Text', serif;
+    transition: all 0.2s ease;
+  }
+
+  .options button:hover {
+    background: #EADCC8;
+    border-color: #8B6A4E; /* antique bronze */
+  }
+
+  .options button.correct {
+    background: #DCE8D5;
+    border-color: #6A8F5B;
+    color: #24351F;
+  }
+
+  .options button.wrong {
+    background: #F1D4CE;
+    border-color: #A34A3C;
+    color: #4A1F1A;
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 26px;
+  }
+
+  .nav-buttons button {
+    flex: 1;
+    padding: 15px;
+    background: #5E4632; /* deep wood tone */
+    border: none;
+    border-radius: 10px;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Crimson Text', serif;
+    transition: all 0.2s ease;
+  }
+
+  .nav-buttons button:disabled {
+    background: #BDAA95;
+    color: #F4ECE2;
+    cursor: not-allowed;
+  }
+
+  .nav-buttons button:hover:not(:disabled) {
+    background: #3E2C1C;
+  }
+
+  .restart-btn {
+    margin-top: 26px;
+    width: 100%;
+    padding: 16px;
+    background: #3B2A1A;
+    border: none;
+    border-radius: 10px;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Crimson Text', serif;
+    transition: all 0.2s ease;
+  }
+
+  .restart-btn:hover {
+    background: #24170F;
+  }
+
+  .result {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 24px;
+    font-weight: 600;
+    color: #3B2A1A;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .target {
+    border-bottom: 2px solid #8B6A4E;
+    padding-bottom: 3px;
+    font-weight: 600;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="quiz-box">
+  <h1>GNS 312 Quiz</h1>
+  <div class="counter" id="counter"></div>
+
+  <div class="question" id="question"></div>
+  <div class="options" id="options"></div>
+
+  <div class="nav-buttons">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+  </div>
+
+  <div class="result" id="result" style="display:none;"></div>
+
+<button class="restart-btn" id="restartBtn" style="display:none;">Restart Quiz</button>
+</div>
+
+<script>
+const quizData = [
+ {
+  q: "Moral philosophy is primarily concerned with:",
+  o: [
+    "Studying religious rituals only",
+    "Determining what actions are right or wrong",
+    "Analyzing economic systems",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "Which branch of ethics examines the meaning of moral terms such as 'good' and 'right'?",
+  o: [
+    "Applied ethics",
+    "Normative ethics",
+    "Meta-ethics",
+    "All of the above"
+  ],
+  a: 2
+},
+{
+  q: "Utilitarianism judges the morality of an action based on:",
+  o: [
+    "The intention behind the action",
+    "The consequences and overall happiness produced",
+    "Religious authority",
+    "Tradition"
+  ],
+  a: 1
+},
+{
+  q: "According to Immanuel Kant’s deontological ethics, an action is morally right if it:",
+  o: [
+    "Produces maximum happiness",
+    "Follows a universal moral law or duty",
+    "Benefits the majority",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "Virtue ethics focuses primarily on:",
+  o: [
+    "Rules and laws",
+    "Consequences only",
+    "The character and moral virtues of the person",
+    "Punishment"
+  ],
+  a: 2
+},
+{
+  q: "Moral relativism holds that:",
+  o: [
+    "Moral principles are universally binding",
+    "Morality depends on culture or individual perspective",
+    "Only religious laws define morality",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "Divine Command Theory suggests that:",
+  o: [
+    "Morality is determined by human agreement",
+    "Moral laws are commands from God",
+    "Morality is based on consequences",
+    "All of the above"
+  ],
+  a: 1
+},
+{
+  q: "An action performed under coercion may reduce moral responsibility because:",
+  o: [
+    "The agent lacks full freedom",
+    "The action produces bad consequences",
+    "The law permits it",
+    "All of the above"
+  ],
+  a: 0
+},
+{
+  q: "Which statement best describes a morally good action under utilitarianism?",
+  o: [
+    "It benefits the actor only",
+    "It maximizes overall happiness",
+    "It follows tradition strictly",
+    "It avoids all criticism"
+  ],
+  a: 1
+},
+{
+  q: "Justice, in moral philosophy, is primarily concerned with:",
+  o: [
+    "Fair distribution of benefits and burdens",
+    "Revenge",
+    "Religious rituals",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "True or False: Deontological ethics evaluates actions based solely on their consequences.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "True or False: Virtue ethics emphasizes moral character rather than isolated actions.",
+  o: [
+    "True",
+    "False",
+    "Both are correct",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "Which philosopher is most associated with utilitarianism?",
+  o: [
+    "Immanuel Kant",
+    "Aristotle",
+    "John Stuart Mill",
+    "None of the above"
+  ],
+  a: 2
+},
+{
+  q: "A moral dilemma occurs when:",
+  o: [
+    "Only one clear moral choice exists",
+    "Two or more moral principles conflict",
+    "The law is silent",
+    "All of the above"
+  ],
+  a: 1
+},
+{
+  q: "An action is morally permissible if it:",
+  o: [
+    "Is not morally wrong",
+    "Is commanded by law only",
+    "Produces punishment",
+    "None of the above"
+  ],
+  a: 0
+},
+
+{
+  q: "Philosophy is traditionally defined as:",
+  o: [
+    "The science of politics",
+    "The love of wisdom",
+    "The study of religion only",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "Which of the following is NOT a recognized branch of philosophy?",
+  o: [
+    "Metaphysics",
+    "Ethics",
+    "Sociology",
+    "Epistemology"
+  ],
+  a: 2
+},
+{
+  q: "The scope of philosophy includes:",
+  o: [
+    "Critical examination of beliefs",
+    "Analysis of moral values",
+    "Study of reality and knowledge",
+    "All of the above"
+  ],
+  a: 3
+},
+{
+  q: "True or False: Philosophy relies mainly on blind acceptance of tradition.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "Man is regarded as a social being because he:",
+  o: [
+    "Naturally seeks interaction and cooperation",
+    "Can survive independently without society",
+    "Rejects organized living",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "A society can best be described as:",
+  o: [
+    "A group of animals living together",
+    "A structured community of people sharing common values and institutions",
+    "A political party",
+    "All of the above"
+  ],
+  a: 1
+},
+{
+  q: "One major objective of education in Nigeria is to:",
+  o: [
+    "Promote national unity",
+    "Encourage moral development",
+    "Develop intellectual capacity",
+    "All of the above"
+  ],
+  a: 3
+},
+{
+  q: "Education in the Nigerian traditional system focused mainly on:",
+  o: [
+    "Vocational and moral training",
+    "Online learning",
+    "Industrial automation",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "True or False: Western education introduced formal classroom systems into Nigeria.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "The importance of social philosophy lies in its ability to:",
+  o: [
+    "Guide social order and justice",
+    "Encourage moral reflection in society",
+    "Critically analyze institutions",
+    "All of the above"
+  ],
+  a: 3
+},
+
+
+{
+      q: "A State must possess which of the following essential elements?",
+      o: [
+        "Population, Territory, Government, Sovereignty",
+        "Religion, Army, Culture, Language",
+        "Judiciary only",
+        "None of the above"
+      ],
+      a: 0
+    },
+    {
+      q: "The Force Theory of the origin of the State argues that the State was formed through:",
+      o: [
+        "Mutual agreement",
+        "Divine instruction",
+        "Conquest and coercion",
+        "Economic cooperation"
+      ],
+      a: 2
+    },
+    {
+      q: "The ultimate goal of government is generally considered to be:",
+      o: [
+        "Wealth accumulation",
+        "Promotion of the common good",
+        "Military expansion",
+        "None of the above"
+      ],
+      a: 1
+    },
+    {
+      q: "True or False: Civil disobedience is always violent in nature.",
+      o: [
+        "True",
+        "False",
+        "Both True and False",
+        "None of the above"
+      ],
+      a: 1
+    },
+    {
+      q: "Civil disobedience is morally justified when:",
+      o: [
+        "The law contradicts fundamental moral principles",
+        "Citizens dislike policies",
+        "Elections are near",
+        "All of the above"
+      ],
+      a: 0
+    },
+    {
+      q: "Authority differs from mere power because authority:",
+      o: [
+        "Is backed by legitimacy and acceptance",
+        "Relies purely on force",
+        "Is temporary",
+        "None of the above"
+      ],
+      a: 0
+    },
+    {
+      q: "Sovereignty is best described as:",
+      o: [
+        "Shared political opinion",
+        "Supreme and final authority in a State",
+        "Military dominance",
+        "Religious control"
+      ],
+      a: 1
+    },
+    {
+      q: "Which of the following are attributes of sovereignty?",
+      o: [
+        "Supremacy",
+        "Permanence",
+        "Indivisibility",
+        "All of the above"
+      ],
+      a: 3
+    },
+    {
+      q: "Justice is primarily concerned with:",
+      o: [
+        "Revenge",
+        "Fairness and moral rightness",
+        "Wealth distribution only",
+        "None of the above"
+      ],
+      a: 1
+    },
+    {
+      q: "The rule of law means:",
+      o: [
+        "Government officials are above the law",
+        "Law applies equally to all citizens",
+        "Only judges must obey the law",
+        "None of the above"
+      ],
+      a: 1
+    },
+    {
+      q: "Equity in justice refers to:",
+      o: [
+        "Strict punishment",
+        "Fair application of laws considering circumstances",
+        "Military enforcement",
+        "None of the above"
+      ],
+      a: 1
+    },
+    {
+      q: "True or False: Human rights are inherent and not granted by government.",
+      o: [
+        "True",
+        "False",
+        "Both True and False",
+        "None of the above"
+      ],
+      a: 0
+    },
+    {
+      q: "Which of the following is a characteristic of human rights?",
+      o: [
+        "Universality",
+        "Inalienability",
+        "Indivisibility",
+        "All of the above"
+      ],
+      a: 3
+    },
+    {
+      q: "The Universal Declaration of Human Rights was adopted in:",
+      o: [
+        "1945",
+        "1948",
+        "1960",
+        "1975"
+      ],
+      a: 1
+    },
+    {
+      q: "Duties are important in society because they:",
+      o: [
+        "Promote social responsibility",
+        "Balance individual rights",
+        "Ensure order",
+        "All of the above"
+      ],
+      a: 3
+    },
+  
+ {
+  q: "A State is best defined as:",
+  o: [
+    "Any large group of people",
+    "A politically organized community with a defined territory and government",
+    "A cultural association",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "The Social Contract Theory of the origin of the State suggests that:",
+  o: [
+    "The State evolved from force",
+    "The State was created by divine will",
+    "Individuals agreed to form a government for mutual benefit",
+    "None of the above"
+  ],
+  a: 2
+},
+{
+  q: "Which of the following is NOT an essential feature of a State?",
+  o: [
+    "Population",
+    "Defined territory",
+    "Religious uniformity",
+    "Government"
+  ],
+  a: 2
+},
+{
+  q: "The legislature, executive, and judiciary represent:",
+  o: [
+    "Types of sovereignty",
+    "Arms of government",
+    "Forms of justice",
+    "All of the above"
+  ],
+  a: 1
+},
+{
+  q: "True or False: The primary aim of government is the promotion of the common good.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "Civil disobedience becomes morally justified when:",
+  o: [
+    "Laws are unjust and violate fundamental rights",
+    "Citizens dislike leadership",
+    "Taxes increase",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "True or False: Civil disobedience must always involve violence.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "Power differs from authority because authority:",
+  o: [
+    "Is based on legitimacy and acceptance",
+    "Depends purely on force",
+    "Has no structure",
+    "Is temporary"
+  ],
+  a: 0
+},
+{
+  q: "Which of the following best explains the concept of the Rule of Law?",
+  o: [
+    "Leaders are superior to the constitution",
+    "Law applies equally to both rulers and the ruled",
+    "Only citizens are accountable to the law",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "The Divine Theory of the origin of the State maintains that:",
+  o: [
+    "The State was formed by social agreement",
+    "The State developed gradually over time",
+    "The State was ordained by God",
+    "None of the above"
+  ],
+  a: 2
+},
+{
+  q: "True or False: Sovereignty can legally be shared between two supreme authorities within the same territory.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "Which type of justice concerns fair distribution of benefits and burdens in society?",
+  o: [
+    "Retributive justice",
+    "Distributive justice",
+    "Legal justice",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "A government that derives its authority from the consent of the governed reflects the principle of:",
+  o: [
+    "Absolute monarchy",
+    "Popular sovereignty",
+    "Military dictatorship",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "True or False: Rights without corresponding duties can lead to social disorder.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "Civil disobedience is different from revolution because civil disobedience:",
+  o: [
+    "Seeks complete overthrow of government",
+    "Is usually peaceful and selective in law-breaking",
+    "Rejects moral justification",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "Which of the following is NOT an attribute of sovereignty?",
+  o: [
+    "Supremacy",
+    "Permanence",
+    "Divisibility",
+    "Indivisibility"
+  ],
+  a: 2
+},
+{
+  q: "The Social Contract theory argues that the State originated from:",
+  o: [
+    "Military conquest",
+    "Gradual evolution",
+    "Agreement among individuals",
+    "None of the above"
+  ],
+  a: 2
+},
+{
+  q: "Which of the following is NOT a feature of a State?",
+  o: [
+    "Population",
+    "Defined territory",
+    "Sovereignty",
+    "Religious uniformity"
+  ],
+  a: 3
+},
+{
+  q: "True or False: Authority is power that is accepted as legitimate.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "The concept of popular sovereignty implies that:",
+  o: [
+    "Power belongs ultimately to the people",
+    "Power belongs to the military",
+    "Power belongs to traditional rulers",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "Which type of justice focuses on punishment for wrongdoing?",
+  o: [
+    "Distributive justice",
+    "Retributive justice",
+    "Social justice",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "The rule of law requires that:",
+  o: [
+    "Only leaders obey the law",
+    "Laws apply equally to everyone",
+    "Citizens are above the law",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "True or False: Human rights are granted by government and can be withdrawn at will.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "Civil disobedience is usually justified when:",
+  o: [
+    "Citizens are bored",
+    "A law is morally unjust",
+    "Taxes are high",
+    "All of the above"
+  ],
+  a: 1
+},
+{
+  q: "Which of the following are characteristics of human rights?",
+  o: [
+    "Universality",
+    "Inalienability",
+    "Indivisibility",
+    "All of the above"
+  ],
+  a: 3
+},
+{
+  q: "Sovereignty is described as indivisible because:",
+  o: [
+    "It can be shared equally",
+    "It cannot be divided among equal supreme authorities",
+    "It belongs only to kings",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "An action is described as amoral when it:",
+  o: [
+    "Violates moral standards",
+    "Conforms strictly to moral law",
+    "Is outside the scope of moral judgment",
+    "Is morally justified but socially rejected"
+  ],
+  a: 2
+},
+{
+  q: "Which of the following best distinguishes immoral from amoral behavior?",
+  o: [
+    "Immoral actions are illegal while amoral actions are legal",
+    "Immoral actions oppose moral standards, amoral actions ignore them",
+    "Amoral actions are always harmful",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "A person who knowingly lies to gain advantage acts:",
+  o: [
+    "Morally",
+    "Amorally",
+    "Immorally",
+    "None of the above"
+  ],
+  a: 2
+},
+{
+  q: "True or False: A newborn baby can properly be described as immoral.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 1
+},
+{
+  q: "An action performed without awareness of right or wrong is best classified as:",
+  o: [
+    "Moral",
+    "Immoral",
+    "Amoral",
+    "All of the above"
+  ],
+  a: 2
+},
+{
+  q: "Which of the following may be considered a moral action?",
+  o: [
+    "An action done freely and with good intention",
+    "An action done under coercion",
+    "An accidental action with harmful outcome",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "True or False: Every illegal act is necessarily immoral.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "All of the above"
+  ],
+  a: 1
+},
+{
+  q: "If a robot destroys property because of faulty programming, the act is:",
+  o: [
+    "Immoral",
+    "Moral",
+    "Amoral",
+    "None of the above"
+  ],
+  a: 2
+},
+{
+  q: "Which condition is necessary for an act to be morally evaluated?",
+  o: [
+    "Freedom",
+    "Knowledge",
+    "Intentionality",
+    "All of the above"
+  ],
+  a: 3
+},
+{
+  q: "A person who refuses to consider moral principles in decision-making can best be described as:",
+  o: [
+    "Moral",
+    "Immoral",
+    "Amoral",
+    "None of the above"
+  ],
+  a: 2
+},
+{
+  q: "True or False: An immoral act always involves deliberate wrongdoing.",
+  o: [
+    "True",
+    "False",
+    "Both True and False",
+    "None of the above"
+  ],
+  a: 0
+},
+{
+  q: "Which of the following scenarios represents immorality?",
+  o: [
+    "A child unknowingly breaking a rule",
+    "A mentally unstable person acting without awareness",
+    "A person deliberately cheating in an exam",
+    "All of the above"
+  ],
+  a: 2
+}
+    
+]
+
+
+let current = 0;
+let score = 0;
+
+// ✅ Pick 60 random questions WITHOUT modifying quizData
+function pickRandomQuestions(bank, count) {
+  const copy = [...bank];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, count);
+}
+
+const examData = pickRandomQuestions(quizData, 60);
+
+let answers = new Array(examData.length).fill(null);
+let shuffledOptions = new Array(examData.length).fill(null);
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("nextBtn");
+const prevBtn = document.getElementById("prevBtn");
+const counterEl = document.getElementById("counter");
+const resultEl = document.getElementById("result");
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function loadQuestion() {
+  const q = examData[current];
+
+  counterEl.textContent = `Question ${current + 1} of ${examData.length}`;
+  questionEl.innerHTML = q.q;
+  optionsEl.innerHTML = "";
+
+  prevBtn.disabled = current === 0;
+
+  let optionsToRender;
+
+  if (shuffledOptions[current] === null) {
+    optionsToRender = q.o.map((text, index) => ({
+      text,
+      originalIndex: index
+    }));
+
+    shuffleArray(optionsToRender);
+    shuffledOptions[current] = optionsToRender;
+  } else {
+    optionsToRender = shuffledOptions[current];
+  }
+
+  optionsToRender.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt.text;
+
+    if (answers[current] !== null) {
+      btn.disabled = true;
+
+      if (opt.originalIndex === q.a) {
+        btn.classList.add("correct");
+      }
+
+      if (
+        opt.originalIndex === answers[current] &&
+        answers[current] !== q.a
+      ) {
+        btn.classList.add("wrong");
+      }
+    }
+
+    btn.onclick = () => selectAnswer(opt.originalIndex);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(index) {
+  if (answers[current] !== null) return;
+
+  answers[current] = index;
+  if (index === examData[current].a) score++;
+
+  loadQuestion();
+}
+
+nextBtn.onclick = () => {
+  if (current < examData.length - 1) {
+    current++;
+    loadQuestion();
+  } else {
+    showResult();
+  }
+};
+
+prevBtn.onclick = () => {
+  if (current > 0) {
+    current--;
+    loadQuestion();
+  }
+};
+
+function showResult() {
+  questionEl.style.display = "none";
+  optionsEl.style.display = "none";
+  counterEl.style.display = "none";
+  document.querySelector(".nav-buttons").style.display = "none";
+
+  const percentage = ((score / examData.length) * 100).toFixed(2);
+  resultEl.style.display = "block";
+  restartBtn.style.display ="block";
+
+  resultEl.innerHTML = `
+    <p><strong>Quiz Completed</strong></p>
+    <p>Score: ${score} / ${examData.length}</p>
+    <p>Percentage: ${percentage}%</p>
+  `;
+}
+
+restartBtn.onclick = () => {
+  current = 0;
+  score = 0;
+
+  const newExamData = pickRandomQuestions(quizData, 60);
+  examData.length = 0;
+  examData.push(...newExamData);
+
+  answers = new Array(examData.length).fill(null);
+  shuffledOptions = new Array(examData.length).fill(null);
+
+  questionEl.style.display = "block";
+  optionsEl.style.display = "block";
+  counterEl.style.display = "block";
+  document.querySelector(".nav-buttons").style.display = "flex";
+  resultEl.style.display = "none";
+  restartBtn.style.display = "none";
+
+  prevBtn.disabled = true;
+  nextBtn.disabled = false;
+
+  loadQuestion();
+};
+
+loadQuestion();
+</script>
+
+</body>
+</html>
